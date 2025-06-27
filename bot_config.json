@@ -1,0 +1,17 @@
+{
+  "target_url": "https://nokael-whatsapp.onrender.com/",
+  "check_interval": 360,
+  "enabled": true,
+  "urls": [
+    {
+      "url": "https://nokael-whatsapp.onrender.com",
+      "interval": 360,
+      "enabled": true
+    },
+    {
+      "url": "https://github.com",
+      "interval": 120,
+      "enabled": true
+    }
+  ]
+}

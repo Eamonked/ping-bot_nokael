@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Bot Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #f4f6fa;
+        }
+        .dashboard-header {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff;
+            padding: 2rem 0 1rem 0;
+            text-align: center;
+            border-radius: 0 0 1.5rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .dashboard-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        .summary-panel {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 1rem 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+        .summary-item {
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .summary-dot {
+            font-size: 1.3rem;
+        }
+        .card-url {
+            min-width: 260px;
+            margin-bottom: 1rem;
+        }
+        .card-header {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .card-title {
+            font-size: 1.1rem;
+        }
+        .last-checked {
+            font-size: 0.95rem;
+            color: #6c757d;
+        }
+        .edit-collapse {
+            transition: max-height 0.3s;
+        }
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: #0d6efd;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+        .refresh-btn:active {
+            color: #0a58ca;
+        }
+        .form-switch .form-check-input {
+            width: 2.5em;
+            height: 1.5em;
+        }
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 9999;
+        }
+        @media (max-width: 767px) {
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+            .summary-panel {
+                flex-direction: column;
+                gap: 0.7rem;
+                padding: 1rem;
+            }
+            .tab-content {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <h1>🚀 Ping Bot Dashboard</h1>
+        <p>Monitor multiple websites with response time tracking</p>
+    </div>
+    <div class="container mb-5">
+        <!-- Summary Panel -->
+        <div class="summary-panel" id="summary-panel">
+            <!-- Populated by JS -->
+        </div>
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="urls-tab" data-bs-toggle="tab" data-bs-target="#urls" type="button" role="tab">Monitored URLs</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#charts" type="button" role="tab">Charts</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab">Logs</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">Settings</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="dashboardTabsContent">
+            <!-- URLs Tab -->
+            <div class="tab-pane fade show active" id="urls" role="tabpanel">
+                <div class="my-3 d-flex flex-wrap align-items-center gap-2">
+                    <span class="badge bg-success" id="bot-status-badge">Bot Status: Running</span>
+                    <span class="ms-2">Monitoring <span id="url-count-badge">{{ config.urls|length }}</span> URL(s)</span>
+                </div>
+                <div class="row g-3" id="url-cards-row">
+                    {% for url_config in config.urls %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card card-url border-0 shadow-sm">
+                            <div class="card-header d-flex align-items-center justify-content-between
+                                {% if not url_config.enabled %}bg-secondary text-white
+                                {% elif url_config.status == 'down' %}bg-danger text-white
+                                {% else %}bg-success text-white{% endif %}">
+                                <span>{{ url_config.url }}</span>
+                                <span>
+                                    {% if not url_config.enabled %}
+                                        <span class="summary-dot" data-bs-toggle="tooltip" title="Disabled">⚪ Disabled</span>
+                                    {% elif url_config.status == 'down' %}
+                                        <span class="summary-dot" data-bs-toggle="tooltip" title="Down">🔴 Down</span>
+                                    {% else %}
+                                        <span class="summary-dot" data-bs-toggle="tooltip" title="Online">🟢 Online</span>
+                                    {% endif %}
+                                    <button class="refresh-btn" title="Refresh status" onclick="refreshUrlStatus('{{ url_config.url }}', this)">🔄</button>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title mb-2">Status: <span class="fw-bold">
+                                    {% if not url_config.enabled %}Disabled{% elif url_config.status == 'down' %}Down{% else %}Online{% endif %}
+                                </span></h5>
+                                <p class="card-text mb-1">Response Time: <span class="fw-bold">
+                                    {% if not url_config.enabled %}<span class='text-muted'>--</span>
+                                    {% else %}{{ url_config.response_time or '--' }} ms{% endif %}
+                                </span></p>
+                                <p class="card-text mb-1">Interval: <span class="fw-bold">{{ url_config.interval }}s</span></p>
+                                <p class="card-text mb-1">Enabled: <span class="fw-bold">{{ 'Yes' if url_config.enabled else 'No' }}</span></p>
+                                <p class="last-checked mb-0">🕒 Last checked: <span class="last-checked-time" data-timestamp="{{ url_config.last_checked|default('') }}">--</span></p>
+                                <button class="btn btn-link p-0 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#edit-url-{{ loop.index0 }}" aria-expanded="false" aria-controls="edit-url-{{ loop.index0 }}">Edit</button>
+                                <div class="collapse edit-collapse mt-2" id="edit-url-{{ loop.index0 }}">
+                                    <div class="edit-url-form" data-original-url="{{ url_config.url }}">
+                                        <div class="row g-2 align-items-center">
+                                            <div class="col-12 mb-2">
+                                                <input type="url" class="form-control url-input" value="{{ url_config.url }}" placeholder="https://example.com" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" class="form-control interval-input" value="{{ url_config.interval }}" min="30" max="3600" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-check">
+                                                    <input class="form-check-input enabled-input" type="checkbox" {% if url_config.enabled %}checked{% endif %}>
+                                                    <label class="form-check-label">Enable</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-end">
+                                                <button type="button" class="btn btn-primary save-btn" onclick="updateUrl(this)">Save</button>
+                                                <button type="button" class="btn btn-outline-danger ms-2" onclick="removeUrl('{{ url_config.url }}', this)">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-3 mt-4">
+                    <button type="button" class="btn btn-outline-primary" onclick="showAddUrlForm()">+ Add URL</button>
+                    <div class="form-check form-switch ms-auto">
+                        <input class="form-check-input" type="checkbox" id="bot-enabled" {% if config.enabled %}checked{% endif %} onchange="toggleBot()">
+                        <label class="form-check-label" for="bot-enabled">Enable Bot</label>
+                    </div>
+                </div>
+                
+                <!-- Add URL Form (Hidden by default) -->
+                <div class="card border-primary mb-3" id="add-url-form" style="display: none;">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">Add New URL</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <input type="url" class="form-control" id="new-url-input" placeholder="https://example.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="number" class="form-control" id="new-interval-input" value="120" min="30" max="3600" required>
+                                <small class="form-text text-muted">Check interval (seconds)</small>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="new-enabled-input" checked>
+                                    <label class="form-check-label" for="new-enabled-input">Enable monitoring</label>
+                                </div>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="button" class="btn btn-secondary" onclick="hideAddUrlForm()">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="addUrl()">Add URL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Charts Tab -->
+            <div class="tab-pane fade" id="charts" role="tabpanel">
+                <div class="row" id="charts-container">
+                    <!-- Chart.js charts will be loaded here -->
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-outline-secondary" onclick="loadCharts(1)">Last 1h</button>
+                    <button class="btn btn-outline-secondary" onclick="loadCharts(6)">Last 6h</button>
+                    <button class="btn btn-outline-secondary active" onclick="loadCharts(24)">Last 24h</button>
+                </div>
+            </div>
+            <!-- Logs Tab -->
+            <div class="tab-pane fade" id="logs" role="tabpanel">
+                <div class="logs-section mt-3">
+                    <div class="logs-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">Recent Logs</h5>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="refreshLogs()">Refresh</button>
+                    </div>
+                    <div class="logs-container bg-dark text-light rounded p-3 mt-2" id="logs-container" style="max-height: 300px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 14px;">
+                        <div class="log-entry">Loading logs...</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Settings Tab -->
+            <div class="tab-pane fade" id="settings" role="tabpanel">
+                <div class="mt-4">
+                    <h5>Settings</h5>
+                    <p class="text-muted">(Coming soon: dark mode, search/filter, summary panel, etc.)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <div class="toast align-items-center text-white bg-success border-0" id="success-toast" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="success-toast-body"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        <div class="toast align-items-center text-white bg-danger border-0" id="error-toast" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="error-toast-body"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Global variables
+        let urlCounter = parseInt('{{ config.urls|length }}') || 0;
+        
+        // Toast functions
+        function showToast(message, type = 'success') {
+            const toastId = type === 'success' ? 'success-toast' : 'error-toast';
+            const toastBodyId = type === 'success' ? 'success-toast-body' : 'error-toast-body';
+            
+            document.getElementById(toastBodyId).textContent = message;
+            const toast = new bootstrap.Toast(document.getElementById(toastId));
+            toast.show();
+        }
+        
+        // URL management functions
+        function updateUrl(button) {
+            const form = button.closest('.edit-url-form');
+            const originalUrl = form.dataset.originalUrl;
+            const urlInput = form.querySelector('.url-input');
+            const intervalInput = form.querySelector('.interval-input');
+            const enabledInput = form.querySelector('.enabled-input');
+            
+            const data = {
+                original_url: originalUrl,
+                url: urlInput.value.trim(),
+                interval: parseInt(intervalInput.value),
+                enabled: enabledInput.checked
+            };
+            
+            // Show loading state
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+            
+            fetch('/api/update_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message);
+                    try {
+                        // Update the card in place
+                        updateUrlCard(originalUrl, data.config);
+                        // Close the edit form
+                        const collapse = form.closest('.collapse');
+                        if (collapse) {
+                            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapse);
+                            bsCollapse.hide();
+                        }
+                    } catch (e) {
+                        // Log UI errors, but do not show error toast
+                        console.error('UI update error:', e);
+                    }
+                } else {
+                    showToast(data.error, 'error');
+                }
+            })
+            .catch(error => {
+                // Only show error toast if the AJAX call itself fails
+                console.error('Error:', error);
+                showToast('Failed to update URL', 'error');
+            })
+            .finally(() => {
+                // Reset button state
+                button.disabled = false;
+                button.textContent = 'Save';
+            });
+        }
+        
+        function addUrl() {
+            const urlInput = document.getElementById('new-url-input');
+            const intervalInput = document.getElementById('new-interval-input');
+            const enabledInput = document.getElementById('new-enabled-input');
+            
+            const data = {
+                url: urlInput.value.trim(),
+                interval: parseInt(intervalInput.value),
+                enabled: enabledInput.checked
+            };
+            
+            if (!data.url) {
+                showToast('Please enter a URL', 'error');
+                return;
+            }
+            
+            const addButton = document.querySelector('#add-url-form .btn-primary');
+            addButton.disabled = true;
+            addButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+            
+            fetch('/api/add_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message);
+                    // Add new card to the page
+                    addUrlCard(data.config, data.new_url_index);
+                    // Reset and hide form
+                    hideAddUrlForm();
+                } else {
+                    showToast(data.error, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to add URL', 'error');
+            })
+            .finally(() => {
+                addButton.disabled = false;
+                addButton.textContent = 'Add URL';
+            });
+        }
+        
+        function removeUrl(url, button) {
+            if (!confirm(`Are you sure you want to remove ${url}?`)) {
+                return;
+            }
+            
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Removing...';
+            
+            fetch('/api/remove_url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({url: url})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message);
+                    // Remove the card from the page
+                    removeUrlCard(url);
+                } else {
+                    showToast(data.error, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to remove URL', 'error');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.textContent = 'Remove';
+            });
+        }
+        
+        function showAddUrlForm() {
+            document.getElementById('add-url-form').style.display = 'block';
+            document.getElementById('new-url-input').focus();
+        }
+        
+        function hideAddUrlForm() {
+            document.getElementById('add-url-form').style.display = 'none';
+            document.getElementById('new-url-input').value = '';
+            document.getElementById('new-interval-input').value = '120';
+            document.getElementById('new-enabled-input').checked = true;
+        }
+        
+        function updateUrlCard(originalUrl, config) {
+            // Find the card with the original URL and update it
+            const cards = document.querySelectorAll('.card-url');
+            cards.forEach(card => {
+                const urlSpan = card.querySelector('.card-header span');
+                if (urlSpan && urlSpan.textContent === originalUrl) {
+                    // Find the updated config by new URL (since it may have changed)
+                    const urlConfig = config.urls.find(u => u.url === urlSpan.textContent);
+                    if (urlConfig) {
+                        // Update URL in header
+                        urlSpan.textContent = urlConfig.url;
+                        // Update status and styling
+                        const header = card.querySelector('.card-header');
+                        const statusSpan = card.querySelector('.card-title .fw-bold');
+                        const responseTimeSpan = card.querySelector('.card-text .fw-bold');
+                        const enabledSpan = card.querySelector('.card-text:last-child .fw-bold');
+                        // Update header styling
+                        header.className = 'card-header d-flex align-items-center justify-content-between';
+                        if (!urlConfig.enabled) {
+                            header.classList.add('bg-secondary', 'text-white');
+                        } else {
+                            header.classList.add('bg-success', 'text-white');
+                        }
+                        // Update status text
+                        statusSpan.textContent = urlConfig.enabled ? 'Online' : 'Disabled';
+                        // Update response time
+                        if (!urlConfig.enabled) {
+                            responseTimeSpan.innerHTML = '<span class="text-muted">--</span>';
+                        } else {
+                            responseTimeSpan.textContent = '-- ms';
+                        }
+                        // Update enabled status
+                        enabledSpan.textContent = urlConfig.enabled ? 'Yes' : 'No';
+                        // Update form data and data-original-url
+                        const form = card.querySelector('.edit-url-form');
+                        if (form) {
+                            form.dataset.originalUrl = urlConfig.url;
+                            form.querySelector('.url-input').value = urlConfig.url;
+                            form.querySelector('.interval-input').value = urlConfig.interval;
+                            form.querySelector('.enabled-input').checked = urlConfig.enabled;
+                        }
+                    }
+                }
+            });
+            // Update summary
+            updateSummary(config);
+        }
+        
+        function addUrlCard(config, newIndex) {
+            const urlConfig = config.urls[newIndex];
+            const cardsRow = document.getElementById('url-cards-row');
+            const cardHtml = `
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card card-url border-0 shadow-sm">
+                        <div class="card-header d-flex align-items-center justify-content-between
+                            ${!urlConfig.enabled ? 'bg-secondary text-white' : 'bg-success text-white'}">
+                            <span>${urlConfig.url}</span>
+                            <span>
+                                <span class="summary-dot" data-bs-toggle="tooltip" title="${urlConfig.enabled ? 'Online' : 'Disabled'}">
+                                    ${urlConfig.enabled ? '🟢 Online' : '⚪ Disabled'}
+                                </span>
+                                <button class="refresh-btn" title="Refresh status" onclick="refreshUrlStatus('${urlConfig.url}', this)">🔄</button>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Status: <span class="fw-bold">${urlConfig.enabled ? 'Online' : 'Disabled'}</span></h5>
+                            <p class="card-text mb-1">Response Time: <span class="fw-bold">${urlConfig.enabled ? '-- ms' : '<span class="text-muted">--</span>'}</span></p>
+                            <p class="card-text mb-1">Interval: <span class="fw-bold">${urlConfig.interval}s</span></p>
+                            <p class="card-text mb-1">Enabled: <span class="fw-bold">${urlConfig.enabled ? 'Yes' : 'No'}</span></p>
+                            <p class="last-checked mb-0">🕒 Last checked: <span class="last-checked-time" data-timestamp="">--</span></p>
+                            <button class="btn btn-link p-0 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#edit-url-${newIndex}" aria-expanded="false" aria-controls="edit-url-${newIndex}">Edit</button>
+                            <div class="collapse edit-collapse mt-2" id="edit-url-${newIndex}">
+                                <div class="edit-url-form" data-original-url="${urlConfig.url}">
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-12 mb-2">
+                                            <input type="url" class="form-control url-input" value="${urlConfig.url}" placeholder="https://example.com" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number" class="form-control interval-input" value="${urlConfig.interval}" min="30" max="3600" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input enabled-input" type="checkbox" ${urlConfig.enabled ? 'checked' : ''}>
+                                                <label class="form-check-label">Enable</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 text-end">
+                                            <button type="button" class="btn btn-primary save-btn" onclick="updateUrl(this)">Save</button>
+                                            <button type="button" class="btn btn-outline-danger ms-2" onclick="removeUrl('${urlConfig.url}', this)">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            cardsRow.insertAdjacentHTML('beforeend', cardHtml);
+            // Update summary
+            updateSummary(config);
+            // Initialize tooltips for new card
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
+        function removeUrlCard(url) {
+            const cards = document.querySelectorAll('.card-url');
+            cards.forEach(card => {
+                const urlSpan = card.querySelector('.card-header span');
+                if (urlSpan && urlSpan.textContent === url) {
+                    card.closest('.col-12').remove();
+                }
+            });
+            
+            // Update summary
+            updateSummary();
+        }
+        
+        function updateSummary(config = null) {
+            if (!config) {
+                // Fetch current config
+                fetch('/api/status')
+                    .then(response => response.json())
+                    .then(data => updateSummary(data.config))
+                    .catch(error => console.error('Error fetching config:', error));
+                return;
+            }
+            
+            const enabledCount = config.urls.filter(u => u.enabled).length;
+            const disabledCount = config.urls.filter(u => !u.enabled).length;
+            const totalCount = config.urls.length;
+            
+            const summaryHtml = `
+                <div class="summary-item">
+                    <span class="summary-dot">🟢</span>
+                    <span>Online: ${enabledCount}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-dot">🔴</span>
+                    <span>Down: 0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-dot">⚪</span>
+                    <span>Disabled: ${disabledCount}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-dot">📊</span>
+                    <span>Total: ${totalCount}</span>
+                </div>
+            `;
+            
+            document.getElementById('summary-panel').innerHTML = summaryHtml;
+            document.getElementById('url-count-badge').textContent = totalCount;
+        }
+        
+        function toggleBot() {
+            const enabled = document.getElementById('bot-enabled').checked;
+            
+            // Create form data for the main config update
+            const formData = new FormData();
+            formData.append('enabled', enabled ? 'on' : 'off');
+            formData.append('url_count', '0'); // No URLs to update, just toggle bot
+            
+            fetch('/update_config', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    showToast(`Bot ${enabled ? 'started' : 'stopped'} successfully`);
+                    document.getElementById('bot-status-badge').textContent = `Bot Status: ${enabled ? 'Running' : 'Stopped'}`;
+                    document.getElementById('bot-status-badge').className = `badge ${enabled ? 'bg-success' : 'bg-secondary'}`;
+                } else {
+                    showToast('Failed to toggle bot', 'error');
+                    // Revert checkbox
+                    document.getElementById('bot-enabled').checked = !enabled;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Failed to toggle bot', 'error');
+                // Revert checkbox
+                document.getElementById('bot-enabled').checked = !enabled;
+            });
+        }
+        
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Initialize summary
+            updateSummary();
+        });
+        
+        // Time ago function
+        function timeAgo(dateString) {
+            if (!dateString) return '--';
+            const now = new Date();
+            const then = new Date(dateString);
+            const diff = Math.floor((now - then) / 1000);
+            if (isNaN(diff) || diff < 0) return '--';
+            if (diff < 60) return `${diff} sec${diff !== 1 ? 's' : ''} ago`;
+            if (diff < 3600) return `${Math.floor(diff/60)} min${Math.floor(diff/60) !== 1 ? 's' : ''} ago`;
+            if (diff < 86400) return `${Math.floor(diff/3600)} hr${Math.floor(diff/3600) !== 1 ? 's' : ''} ago`;
+            return then.toLocaleString();
+        }
+        function updateTimeAgo() {
+            document.querySelectorAll('.last-checked-time').forEach(function(el) {
+                const ts = el.getAttribute('data-timestamp');
+                el.textContent = timeAgo(ts);
+            });
+        }
+        setInterval(updateTimeAgo, 15000);
+        document.addEventListener('DOMContentLoaded', updateTimeAgo);
+
+        // Inline refresh for each URL
+        function refreshUrlStatus(url, btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+            fetch(`/api/current_status?url=${encodeURIComponent(url)}`)
+                .then(r => r.json())
+                .then(data => {
+                    // Optionally update card UI here
+                    setTimeout(() => { btn.disabled = false; btn.innerHTML = '🔄'; }, 800);
+                })
+                .catch(() => { btn.disabled = false; btn.innerHTML = '🔄'; });
+        }
+
+        // Chart.js logic (unchanged)
+        let chartRange = 24;
+        function loadCharts(hours = 24) {
+            chartRange = hours;
+            fetch(`/api/results?hours=${hours}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('charts-container');
+                    container.innerHTML = '';
+                    for (const [url, chartData] of Object.entries(data)) {
+                        if (chartData.labels.length === 0) continue;
+                        const col = document.createElement('div');
+                        col.className = 'col-12 mb-4';
+                        col.innerHTML = `
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">${url} - Response Time (${hours}h)</div>
+                                <div class="card-body">
+                                    <canvas id="chart-${url.replace(/[^a-zA-Z0-9]/g, '-')}"></canvas>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(col);
+                        const ctx = document.getElementById(`chart-${url.replace(/[^a-zA-Z0-9]/g, '-')}`);
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: [{
+                                    label: 'Response Time (ms)',
+                                    data: chartData.response_times,
+                                    borderColor: '#4facfe',
+                                    backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                                    tension: 0.4,
+                                    pointRadius: 2
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                return ` ${context.parsed.y} ms at ${context.label}`;
+                                            }
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Response Time (ms)'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Time'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+        }
+        // Logs
+        function refreshLogs() {
+            fetch('/api/logs')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('logs-container');
+                    if (data.logs.length === 0) {
+                        container.innerHTML = '<div class="log-entry">No logs available</div>';
+                        return;
+                    }
+                    container.innerHTML = data.logs.map(log => {
+                        let className = 'log-entry';
+                        if (log.includes('WARNING')) className += ' text-warning';
+                        else if (log.includes('ERROR')) className += ' text-danger';
+                        else if (log.includes('INFO')) className += ' text-info';
+                        return `<div class="${className}">${log.trim()}</div>`;
+                    }).join('');
+                    container.scrollTop = container.scrollHeight;
+                });
+        }
+    </script>
+</body>
+</html> 
