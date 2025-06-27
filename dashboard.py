@@ -6,6 +6,10 @@ import time
 import logging
 from ping_bot import MultiURLPingBot
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
