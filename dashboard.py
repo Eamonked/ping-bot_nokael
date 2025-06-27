@@ -403,7 +403,11 @@ if __name__ == '__main__':
     # Create templates directory if it doesn't exist
     os.makedirs('templates', exist_ok=True)
     
+    # Get port from environment variable or default to 5001
+    port = int(os.environ.get('PORT', 5001))
+    host = os.environ.get('HOST', '0.0.0.0')
+    
     # Start the Flask app
     print("Starting Ping Bot Dashboard...")
-    print("Open your browser to: http://localhost:5001")
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    print(f"Open your browser to: http://{host}:{port}")
+    app.run(debug=False, host=host, port=port)

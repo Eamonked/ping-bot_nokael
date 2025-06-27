@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: ping-bot-dashboard
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python dashboard.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0 

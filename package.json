@@ -1,0 +1,12 @@
+{
+  "name": "ping-bot",
+  "version": "1.0.0",
+  "description": "Python Ping Bot with Flask Dashboard",
+  "scripts": {
+    "build": "echo 'Python application - no build step needed'",
+    "start": "echo 'Use python dashboard.py to start the application'"
+  },
+  "keywords": ["python", "flask", "monitoring", "ping"],
+  "author": "Eamon",
+  "license": "MIT"
+} 

@@ -896,3 +896,103 @@
 2025-06-27 10:02:25,606 - INFO - Status unchanged for https://github.com: 200 (Response time: 134.7ms)
 2025-06-27 10:04:26,968 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 935.16ms)
 2025-06-27 10:04:27,086 - INFO - Status unchanged for https://github.com: 200 (Response time: 117.16ms)
+2025-06-27 10:06:27,864 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 345.1ms)
+2025-06-27 10:06:28,002 - INFO - Status unchanged for https://github.com: 200 (Response time: 136.37ms)
+2025-06-27 10:08:29,419 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 1011.72ms)
+2025-06-27 10:08:29,572 - INFO - Status unchanged for https://github.com: 200 (Response time: 150.62ms)
+2025-06-27 10:10:30,552 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 577.63ms)
+2025-06-27 10:10:30,694 - INFO - Status unchanged for https://github.com: 200 (Response time: 140.7ms)
+2025-06-27 10:12:32,102 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 992.59ms)
+2025-06-27 10:12:32,229 - INFO - Status unchanged for https://github.com: 200 (Response time: 124.91ms)
+2025-06-27 10:14:33,586 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 937.76ms)
+2025-06-27 10:14:33,702 - INFO - Status unchanged for https://github.com: 200 (Response time: 115.03ms)
+2025-06-27 10:16:35,205 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 1044.31ms)
+2025-06-27 10:16:35,335 - INFO - Status unchanged for https://github.com: 200 (Response time: 128.52ms)
+2025-06-27 10:18:36,157 - INFO - Status unchanged for https://nokael-whatsapp.onrender.com: 200 (Response time: 363.49ms)
+2025-06-27 10:18:36,327 - INFO - Status unchanged for https://github.com: 200 (Response time: 168.97ms)
+2025-06-27 10:20:29,737 - INFO - 127.0.0.1 - - [27/Jun/2025 10:20:29] "POST /api/update_url HTTP/1.1" 200 -
+2025-06-27 10:20:30,474 - INFO - Initial status check for https://www.google.com: 200 (Response time: 722.44ms)
+2025-06-27 10:20:30,641 - INFO - Initial status check for https://github.com: 200 (Response time: 166.3ms)
+2025-06-27 10:20:34,662 - INFO - 127.0.0.1 - - [27/Jun/2025 10:20:34] "POST /api/update_url HTTP/1.1" 200 -
+2025-06-27 10:20:35,396 - INFO - Initial status check for https://www.google.com: 200 (Response time: 730.77ms)
+2025-06-27 10:20:35,503 - INFO - Initial status check for https://github.com: 200 (Response time: 106.62ms)
+2025-06-27 10:21:06,784 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:06] "[35m[1mGET /api/results?hours=1 HTTP/1.1[0m" 500 -
+2025-06-27 10:21:10,369 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:10] "[35m[1mGET /api/results?hours=1 HTTP/1.1[0m" 500 -
+2025-06-27 10:21:11,900 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:11] "[35m[1mGET /api/results?hours=6 HTTP/1.1[0m" 500 -
+2025-06-27 10:21:13,415 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:13] "[35m[1mGET /api/results?hours=1 HTTP/1.1[0m" 500 -
+2025-06-27 10:21:25,695 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:25] "POST /api/update_url HTTP/1.1" 200 -
+2025-06-27 10:21:26,638 - INFO - Initial status check for https://www.google.com: 200 (Response time: 940.05ms)
+2025-06-27 10:21:26,755 - INFO - Initial status check for https://github.com: 200 (Response time: 115.8ms)
+2025-06-27 10:21:33,923 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:33] "GET /?add_url=1 HTTP/1.1" 200 -
+2025-06-27 10:21:33,981 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:33] "GET /api/status HTTP/1.1" 200 -
+2025-06-27 10:21:39,317 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:39] "[35m[1mGET /api/results?hours=1 HTTP/1.1[0m" 500 -
+2025-06-27 10:21:41,349 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:41] "[35m[1mGET /api/results?hours=6 HTTP/1.1[0m" 500 -
+2025-06-27 10:21:44,274 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:44] "GET /?add_url=1 HTTP/1.1" 200 -
+2025-06-27 10:21:44,296 - INFO - 127.0.0.1 - - [27/Jun/2025 10:21:44] "GET /api/status HTTP/1.1" 200 -
+2025-06-27 10:23:27,645 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 480.83ms)
+2025-06-27 10:23:27,780 - INFO - Status unchanged for https://github.com: 200 (Response time: 133.25ms)
+2025-06-27 10:25:28,722 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 536.08ms)
+2025-06-27 10:25:28,853 - INFO - Status unchanged for https://github.com: 200 (Response time: 129.86ms)
+2025-06-27 10:27:29,791 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 492.39ms)
+2025-06-27 10:27:29,933 - INFO - Status unchanged for https://github.com: 200 (Response time: 140.62ms)
+2025-06-27 10:29:30,836 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 497.9ms)
+2025-06-27 10:29:30,978 - INFO - Status unchanged for https://github.com: 200 (Response time: 140.45ms)
+2025-06-27 10:31:31,954 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 520.06ms)
+2025-06-27 10:31:32,102 - INFO - Status unchanged for https://github.com: 200 (Response time: 146.05ms)
+2025-06-27 10:33:33,074 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 545.89ms)
+2025-06-27 10:33:33,222 - INFO - Status unchanged for https://github.com: 200 (Response time: 144.92ms)
+2025-06-27 10:35:34,327 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 528.77ms)
+2025-06-27 10:35:34,462 - INFO - Status unchanged for https://github.com: 200 (Response time: 134.17ms)
+2025-06-27 10:37:35,676 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 617.28ms)
+2025-06-27 10:37:35,807 - INFO - Status unchanged for https://github.com: 200 (Response time: 129.29ms)
+2025-06-27 10:39:36,863 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 602.91ms)
+2025-06-27 10:39:37,003 - INFO - Status unchanged for https://github.com: 200 (Response time: 138.29ms)
+2025-06-27 10:41:37,974 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 570.35ms)
+2025-06-27 10:41:38,099 - INFO - Status unchanged for https://github.com: 200 (Response time: 123.6ms)
+2025-06-27 10:43:39,010 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 487.63ms)
+2025-06-27 10:43:39,401 - INFO - Status unchanged for https://github.com: 200 (Response time: 390.38ms)
+2025-06-27 10:45:40,337 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 503.22ms)
+2025-06-27 10:45:40,849 - INFO - Status unchanged for https://github.com: 200 (Response time: 509.76ms)
+2025-06-27 10:47:41,764 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 482.0ms)
+2025-06-27 10:47:41,908 - INFO - Status unchanged for https://github.com: 200 (Response time: 141.43ms)
+2025-06-27 10:49:42,896 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 579.44ms)
+2025-06-27 10:49:43,012 - INFO - Status unchanged for https://github.com: 200 (Response time: 114.74ms)
+2025-06-27 10:51:43,960 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 545.7ms)
+2025-06-27 10:51:44,084 - INFO - Status unchanged for https://github.com: 200 (Response time: 121.61ms)
+2025-06-27 10:53:45,051 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 550.42ms)
+2025-06-27 10:53:45,612 - INFO - Status unchanged for https://github.com: 200 (Response time: 558.47ms)
+2025-06-27 10:55:46,636 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 616.39ms)
+2025-06-27 10:55:46,766 - INFO - Status unchanged for https://github.com: 200 (Response time: 129.33ms)
+2025-06-27 10:57:47,777 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 614.86ms)
+2025-06-27 10:57:47,886 - INFO - Status unchanged for https://github.com: 200 (Response time: 107.77ms)
+2025-06-27 10:59:48,814 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 496.29ms)
+2025-06-27 10:59:48,928 - INFO - Status unchanged for https://github.com: 200 (Response time: 112.45ms)
+2025-06-27 11:01:49,856 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 508.56ms)
+2025-06-27 11:01:49,985 - INFO - Status unchanged for https://github.com: 200 (Response time: 127.62ms)
+2025-06-27 11:03:50,898 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 469.38ms)
+2025-06-27 11:03:51,021 - INFO - Status unchanged for https://github.com: 200 (Response time: 120.36ms)
+2025-06-27 11:05:51,911 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 463.87ms)
+2025-06-27 11:05:52,031 - INFO - Status unchanged for https://github.com: 200 (Response time: 117.58ms)
+2025-06-27 11:07:52,988 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 501.31ms)
+2025-06-27 11:07:53,186 - INFO - Status unchanged for https://github.com: 200 (Response time: 195.59ms)
+2025-06-27 11:09:54,217 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 606.27ms)
+2025-06-27 11:09:54,344 - INFO - Status unchanged for https://github.com: 200 (Response time: 126.28ms)
+2025-06-27 11:31:08,766 - ERROR - Request failed for https://www.google.com: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+2025-06-27 11:31:08,913 - INFO - Status unchanged for https://github.com: 200 (Response time: 144.6ms)
+2025-06-27 11:35:53,904 - INFO - 192.168.1.75 - - [27/Jun/2025 11:35:53] "GET /?add_url=1 HTTP/1.1" 200 -
+2025-06-27 11:36:01,365 - INFO - 192.168.1.75 - - [27/Jun/2025 11:36:01] "GET /?add_url=1 HTTP/1.1" 200 -
+2025-06-27 11:36:01,500 - INFO - 192.168.1.75 - - [27/Jun/2025 11:36:01] "GET /api/status HTTP/1.1" 200 -
+2025-06-27 12:34:07,051 - ERROR - Request failed for https://www.google.com: HTTPSConnectionPool(host='www.google.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x10702e040>: Failed to resolve 'www.google.com' ([Errno 8] nodename nor servname provided, or not known)"))
+2025-06-27 12:34:27,973 - ERROR - Request failed for https://github.com: ('Connection aborted.', TimeoutError(60, 'Operation timed out'))
+2025-06-27 13:24:48,233 - INFO - Status unchanged for https://www.google.com: 200 (Response time: 2596.93ms)
+2025-06-27 13:24:48,353 - INFO - Status unchanged for https://github.com: 200 (Response time: 118.29ms)
+2025-06-27 13:26:43,981 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.90:5001
+2025-06-27 13:26:43,981 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 13:26:43,982 - INFO -  * Restarting with stat
+2025-06-27 13:26:44,115 - WARNING -  * Debugger is active!
+2025-06-27 13:26:44,123 - INFO -  * Debugger PIN: 109-601-531
+2025-06-27 15:03:50,594 - INFO - 127.0.0.1 - - [27/Jun/2025 15:03:50] "GET /?add_url=1 HTTP/1.1" 200 -
+2025-06-27 15:03:50,668 - INFO - 127.0.0.1 - - [27/Jun/2025 15:03:50] "GET /api/status HTTP/1.1" 200 -
