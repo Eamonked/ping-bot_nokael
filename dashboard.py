@@ -204,6 +204,8 @@ def api_results():
         }
         
         for entry in url_results:
+            if entry['result'] is None:
+                continue
             timestamp = datetime.fromisoformat(entry['timestamp'])
             chart_data[url]['labels'].append(timestamp.strftime('%H:%M'))
             chart_data[url]['response_times'].append(entry['result']['response_time'])
